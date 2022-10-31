@@ -1,10 +1,7 @@
 package com.tecsup.petclinic.services;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -14,13 +11,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.tecsup.petclinic.entities.Owner;
 
-import com.tecsup.petclinic.exception.OwnerNotFoundException;
-
 @SpringBootTest
 public class OwnerServiceTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(OwnerServiceTest.class);
-	
+
 	@Autowired
    	private OwnerService ownerService;
 
@@ -28,11 +23,12 @@ public class OwnerServiceTest {
 	 * 
 	 */
 	
-	@Test
-	public void testFindOwnerById() {
+	
+	/*@Test
+	 * public void testFindOwnerById() {
 
 		long ID = 1;
-		String FIRST_NAME = "Diego";
+		String NAME = "George";
 		Owner owner = null;
 		
 		try {
@@ -44,59 +40,51 @@ public class OwnerServiceTest {
 		}
 		logger.info("" + owner);
 
-		assertEquals(FIRST_NAME, owner.getFirst_name());
+		assertThat(owner.getName(), is(NAME));
 
 	}
-	
+	*/
 	@Test
-	public void testCreateOwner() {
-		
-		String FIRST_NAME = "Diego";
-		String LAST_NAME = "Porras";
-		String ADDRESS= "402 Martinete";
-		String CITY= "Lima";
-		int TELEPHONE=123456789;
-		
-		Owner owner = new Owner(1, FIRST_NAME,LAST_NAME,ADDRESS,CITY,123456789);
-		
+	public void testUpdateOwner() {
+
+		String FIRST_NAME = "George";
+		String LAST_NAME = "Franklin";
+		String ADDRESS = "110 W. Liberty St.";
+		String CITY = "Madison";
+		String TELEPHONE = "6085551023";
+
+		String UP_FIRST_NAME = "George2";
+		String UP_LAST_NAME = "Franklin2";
+		String UP_ADDRESS = "La Molina";
+		String UP_CITY = "Lima";
+		String UP_TELEPHONE = "956326598";
+
+		Owner owner = new Owner(FIRST_NAME, LAST_NAME, ADDRESS,CITY,TELEPHONE);
+
+		// Create record
+		logger.info(">" + owner);
 		Owner ownerCreated = ownerService.create(owner);
-		
-		logger.info("OWNER CREATED :" + ownerCreated);
+		logger.info(">>" + ownerCreated);
 
-		//          ACTUAL                 , EXPECTED 
-		assertThat(ownerCreated.getId()      , notNullValue());
-		assertThat(ownerCreated.getFirst_name()    , is(FIRST_NAME));
-		assertThat(ownerCreated.getLast_name() , is(LAST_NAME));
-		assertThat(ownerCreated.getAddress()  , is(ADDRESS));
-		assertThat(ownerCreated.getCity()  , is(CITY));
-		assertThat(ownerCreated.getTelephone()  , is(TELEPHONE));
 
-	}
-	public void testDeleteOwner() {
+		// Prepare data for update
+		ownerCreated.setFirst_name(UP_FIRST_NAME);
+		ownerCreated.setLast_name(UP_LAST_NAME);
+		ownerCreated.setAddress(UP_ADDRESS);
+		ownerCreated.setCity(UP_CITY);
+		ownerCreated.setTelephone(UP_TELEPHONE);
 
-		String FIRST_NAME = "Diego";
-		String LAST_NAME = "Porras";
-		String ADDRESS= "402 Martinete";
-		String CITY= "Lima";
-		int TELEPHONE= 123456789;
 
-		Owner owner = new Owner(1,FIRST_NAME, LAST_NAME, ADDRESS, CITY, TELEPHONE);
-		owner = ownerService.create(owner);
-		logger.info("" + owner);
+		// Execute update
+		Owner upgradeOwner = ownerService.update(ownerCreated);
+		logger.info(">>>>" + upgradeOwner);
 
-		try {
-			ownerService.delete(owner.getId());
-		} catch (OwnerNotFoundException e) {
-			fail(e.getMessage());
-		}
-			
-		try {
-			ownerService.findById(owner.getId());
-			fail("Owner id = " + owner.getId() + " has not delete");
-		} catch (OwnerNotFoundException e) {
-		} 				
-
-	}
-		
+		//        ACTUAL       EXPECTED
+		assertThat(upgradeOwner.getFirst_name(), is(UP_FIRST_NAME));
+		assertThat(upgradeOwner.getLast_name(), is(UP_LAST_NAME));
+		assertThat(upgradeOwner.getAddress(), is(UP_ADDRESS));
+		assertThat(upgradeOwner.getCity(), is(UP_CITY));
+		assertThat(upgradeOwner.getTelephone(), is(UP_TELEPHONE));
 	}
 
+}
